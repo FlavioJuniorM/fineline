@@ -759,23 +759,7 @@
                                   class="w-full px-4 py-3 bg-darker border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white"></textarea>
                     </div>
                     
-                    <div>
-                        <label class="block text-white mb-2">Anexar Arquivo 3D (opcional)</label>
-                        <div id="file-upload" class="file-upload rounded-lg p-8 text-center cursor-pointer">
-                            <input type="file" id="file-input" name="file" accept=".stl,.obj" class="hidden">
-                            <div class="flex flex-col items-center justify-center">
-                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-                                <p class="text-gray-400 mb-2">Arraste e solte seu arquivo aqui ou clique para selecionar</p>
-                                <p class="text-sm text-gray-500">Formatos aceitos: .STL ou .OBJ (máx. 20MB)</p>
-                            </div>
-                        </div>
-                        <div id="file-info" class="mt-2 text-sm text-gray-400 hidden">
-                            <span id="file-name"></span> (<span id="file-size"></span>)
-                            <button type="button" id="remove-file" class="ml-2 text-red-400 hover:text-red-300">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
+ 
                     
                     <div class="pt-2">
                         <button type="submit" class="w-full bg-primary hover:bg-blue-800 text-white px-6 py-4 rounded-lg font-medium transition-colors">
@@ -903,7 +887,7 @@
   });
 
   // File upload handling
-  const fileUpload = document.getElementById('file-upload');
+ /* const fileUpload = document.getElementById('file-upload');
   const fileInput = document.getElementById('file-input');
   const fileInfo = document.getElementById('file-info');
   const fileName = document.getElementById('file-name');
@@ -947,19 +931,19 @@
     // Validate file type
     const validTypes = ['application/octet-stream', 'application/vnd.ms-pki.stl', 'model/stl', 'model/obj'];
     const fileExt = file.name.split('.').pop().toLowerCase();
-    
+
     if (fileExt !== 'stl' && fileExt !== 'obj') {
       alert('Por favor, envie apenas arquivos .STL ou .OBJ');
       return;
     }
-    
+
     // Validate file size (20MB max)
     const maxSize = 20 * 1024 * 1024; // 20MB
     if (file.size > maxSize) {
       alert('O arquivo é muito grande. O tamanho máximo permitido é 20MB.');
       return;
     }
-    
+
     // Display file info
     fileName.textContent = file.name;
     fileSize.textContent = formatFileSize(file.size);
@@ -972,45 +956,47 @@
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
+  }*/
 
   // Form submission
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
+  document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
-    // Simulate form submission (in a real app, this would be a fetch to your backend)
+
+    const form = e.target;
+    const formData = new FormData(form);
+
     const successMessage = document.getElementById('success-message');
     const errorMessage = document.getElementById('error-message');
-    
-    // Randomly show success or error for demo purposes
-    if (Math.random() > 0.2) {
-      successMessage.classList.remove('hidden');
-      errorMessage.classList.add('hidden');
-      
-      // Reset form
-      this.reset();
-      fileInfo.classList.add('hidden');
-      
-      // Scroll to success message
-      setTimeout(() => {
-        successMessage.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
+
+    try {
+      const response = await fetch("https://formspree.io/f/xjkwljlq", {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        successMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        form.reset();
+      } else {
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+      }
+    } catch (error) {
       errorMessage.classList.remove('hidden');
       successMessage.classList.add('hidden');
-      
-      // Scroll to error message
-      setTimeout(() => {
-        errorMessage.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
     }
-    
-    // Hide messages after 5 seconds
+
     setTimeout(() => {
       successMessage.classList.add('hidden');
       errorMessage.classList.add('hidden');
     }, 5000);
   });
+});
 
   // Smooth scrolling for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
