@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Line 3D - Impressão 3D de Alta Qualidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1c4c7e',
+                        dark: '#0a0a0a',
+                        darker: '#121212'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: white;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(28, 76, 126, 0.2) 0%, rgba(10, 10, 10, 1) 100%);
+        }
+        
+        .file-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            border-color: #1c4c7e;
+        }
+        
+        .file-upload.dragover {
+            border-color: #1c4c7e;
+            background-color: rgba(28, 76, 126, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #1c4c7e;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .floating-btn {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .portfolio-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .portfolio-item:hover .portfolio-image {
+            transform: scale(1.05);
+        }
+
+        .process-step {
+            position: relative;
+            padding-left: 4rem;
+            margin-bottom: 3rem;
+        }
+        
+        .process-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .process-step::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: rgba(28, 76, 126, 0.5);
+        }
+        
+        .process-step:last-child::before {
+            display: none;
+        }
+        
+        .process-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #1c4c7e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5511991299952" target="_blank" class="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-green-600 transition-colors floating-btn">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Instagram Floating Button -->
+    <a href="https://instagram.com/fine_lines3d" target="_blank" class="fixed bottom-28 right-8 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-lg z-50 hover:from-purple-600 hover:to-pink-600 transition-colors floating-btn">
+        <i class="fab fa-instagram text-2xl"></i>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="bg-darker py-4 sticky top-0 z-40 border-b border-gray-800">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
+                    <div class="w-6 h-6 bg-white rounded-full"></div>
+                </div>
+                <span class="text-xl font-bold text-white">Fine Line <span class="text-primary">3D</span></span>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link text-white hover:text-primary transition-colors">Início</a>
+                <a href="#services" class="nav-link text-white hover:text-primary transition-colors">Serviços</a>
+                <a href="#portfolio" class="nav-link text-white hover:text-primary transition-colors">Portfólio</a>
+                <a href="#about" class="nav-link text-white hover:text-primary transition-colors">Sobre Nós</a>
+                <a href="#contact" class="nav-link text-white hover:text-primary transition-colors">Contato</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-darker px-6 py-4 border-t border-gray-800">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="nav-link text-white hover:text-primary transition-colors">Início</a>
+                <a href="#services" class="nav-link text-white hover:text-primary transition-colors">Serviços</a>
+                <a href="#portfolio" class="nav-link text-white hover:text-primary transition-colors">Portfólio</a>
+                <a href="#about" class="nav-link text-white hover:text-primary transition-colors">Sobre Nós</a>
+                <a href="#contact" class="nav-link text-white hover:text-primary transition-colors">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-primary rounded-full filter blur-3xl opacity-30"></div>
+            <div class="absolute bottom-0 right-0 w-64 h-64 bg-primary rounded-full filter blur-3xl opacity-30"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 py-20 z-10 fade-in">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">
+                    Transforme suas ideias em <span class="text-primary">realidade</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8">
+                    Na Fine Line 3D, combinamos tecnologia avançada de impressão 3D com expertise técnica para criar peças precisas e de alta qualidade para seus projetos mais desafiadores.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="bg-primary hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-medium transition-colors text-center">
+                        Solicitar Orçamento
+                    </a>
+                    <a href="#services" class="bg-transparent border border-white hover:border-primary text-white hover:text-primary px-8 py-3 rounded-lg font-medium transition-colors text-center">
+                        Nossos Serviços
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hidden lg:block absolute right-0 bottom-0 w-1/2 h-full">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-64 h-64 bg-primary rounded-full filter blur-3xl opacity-20"></div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1581092921461-39b2f2a7a54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                 alt="Impressora 3D" 
+                 class="absolute right-0 bottom-0 w-full h-full object-cover opacity-70">
+        </div>
+    </section>
+
+    <!-- What is 3D Printing Section -->
+    <section class="py-20 bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    O que é <span class="text-primary">Impressão 3D</span>?
+                </h2>
+                <p class="text-lg text-gray-300">
+                    A impressão 3D é um processo de fabricação aditiva que cria objetos físicos a partir de modelos digitais, camada por camada. Essa tecnologia revolucionária permite a produção de peças complexas com alta precisão e personalização.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
+                <div class="bg-darker p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-cube text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Design Digital</h3>
+                    <p class="text-gray-400">
+                        Crie ou importe modelos 3D usando software CAD. Nossa equipe pode ajudar a otimizar seu design para impressão.
+                    </p>
+                </div>
+                
+                <div class="bg-darker p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-layer-group text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Fabricação Aditiva</h3>
+                    <p class="text-gray-400">
+                        A impressora constrói o objeto deposando material camada por camada, com precisão de até 0.05mm.
+                    </p>
+                </div>
+                
+                <div class="bg-darker p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-box-open text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Produto Final</h3>
+                    <p class="text-gray-400">
+                        Após a impressão, as peças são limpas, pós-processadas e prontas para uso em seu projeto.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-darker">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    Nossos <span class="text-primary">Serviços</span>
+                </h2>
+                <p class="text-lg text-gray-300">
+                    Oferecemos soluções completas em impressão 3D para diversas aplicações, desde prototipagem rápida até produção de peças funcionais.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 fade-in">
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-6">
+                            <i class="fas fa-lightbulb text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3 text-white">Prototipagem Rápida</h3>
+                            <p class="text-gray-400 mb-4">
+                                Transforme suas ideias em protótipos físicos em questão de horas, permitindo testes vàlidação de conceitos antes da produção em larga escala.
+                            </p>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Redução de tempo e custos no desenvolvimento</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Iterações rápidas de design</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Testes funcionais e ergonômicos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-6">
+                            <i class="fas fa-industry text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3 text-white">Peças Funcionais</h3>
+                            <p class="text-gray-400 mb-4">
+                                Produção de componentes finais com materiais de alta resistência e durabilidade para aplicações industriais e mecânicas.
+                            </p>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Materiais resistentes a impactos e temperaturas</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Precisão dimensional para encaixes perfeitos</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Produção sob demanda sem custos de ferramental</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-6">
+                            <i class="fas fa-robot text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3 text-white">Componentes Personalizados</h3>
+                            <p class="text-gray-400 mb-4">
+                                Criação de peças sob medida para projetos específicos, desde componentes eletrônicos até peças de reposição.
+                            </p>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Designs exclusivos para necessidades específicas</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Integração de múltiplas peças em um único componente</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Soluções para peças obsoletas ou fora de linha</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-6">
+                            <i class="fas fa-paint-brush text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3 text-white">Acabamentos Especiais</h3>
+                            <p class="text-gray-400 mb-4">
+                                Serviços de pós-processamento para melhorar a aparência e funcionalidade das peças impressas.
+                            </p>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Lixamento e polimento para superfícies lisas</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Pintura e texturização personalizada</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"></i>
+                                    <span>Tratamentos químicos para resistência</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Steps -->
+            <div class="max-w-4xl mx-auto mt-20 bg-dark p-8 rounded-lg border border-gray-800 fade-in">
+                <h2 class="text-3xl font-bold mb-8 text-white text-center">
+                    Nosso <span class="text-primary">Processo</span> de Trabalho
+                </h2>
+                
+                <div class="relative">
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">1. Recebimento do Arquivo</h3>
+                        <p class="text-gray-400">
+                            Envie seu arquivo 3D nos formatos .STL ou .OBJ. Nossa equipe fará uma análise técnica para verificar a viabilidade de impressão e sugerir melhorias se necessário.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">2. Orçamento Personalizado</h3>
+                        <p class="text-gray-400">
+                            Com base no arquivo recebido, calculamos o custo considerando material, tempo de impressão e acabamentos especiais. Enviamos uma proposta detalhada em até 24 horas.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i class="fas fa-print"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">3. Fase de Impressão</h3>
+                        <p class="text-gray-400">
+                            Após aprovação do orçamento, iniciamos a impressão com monitoramento constante. Utilizamos as melhores tecnologias (FDM, SLA, SLS) conforme a necessidade do projeto.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">4. Entrega do Projeto</h3>
+                        <p class="text-gray-400">
+                            A peça finalizada passa por controle de qualidade antes da entrega. Oferecemos opções de retirada em nosso laboratório ou envio por transportadora com rastreamento.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">5. Feedback e Avaliação</h3>
+                        <p class="text-gray-400">
+                            Após a entrega, solicitamos seu feedback para avaliar sua satisfação. Compartilhe sua experiência em nossas plataformas e redes sociais.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    Nosso <span class="text-primary">Portfólio</span>
+                </h2>
+                <p class="text-lg text-gray-300">
+                    Confira alguns dos nossos trabalhos e veja a impressão 3D em ação em nossos vídeos exclusivos.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
+                <!-- Image 1 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Impressora 3D em ação" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Impressão de Peça Mecânica</h3>
+                        <p class="text-gray-400">Processo de impressão FDM de um componente mecânico em ABS.</p>
+                    </div>
+                </div>
+                
+                <!-- Image 2 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581093057306-d3075d50a86d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Prototipagem Rápida em Resina" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Prototipagem Rápida em Resina</h3>
+                        <p class="text-gray-400">Impressão SLA de protótipo com altíssimo nível de detalhe.</p>
+                    </div>
+                </div>
+                
+                <!-- Image 3 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581093057153-9ec7a7a10d9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Peça Industrial em Nylon" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Peça Industrial em Nylon</h3>
+                        <p class="text-gray-400">Processo SLS para produção de peça funcional em nylon.</p>
+                    </div>
+                </div>
+                
+                <!-- Image 4 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581093057923-7257b5c3b56b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Pós-processamento de Peça" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Pós-processamento de Peça</h3>
+                        <p class="text-gray-400">Técnicas de acabamento para peças impressas em FDM.</p>
+                    </div>
+                </div>
+                
+                <!-- Image 5 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581093053737-91d47b9355d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Montagem de Componentes" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Montagem de Componentes</h3>
+                        <p class="text-gray-400">Encade de peças impressas separadamente para formar um mecanismo complexo.</p>
+                    </div>
+                </div>
+                
+                <!-- Image 6 -->
+                <div class="portfolio-item bg-darker rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition-colors">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581093057151-8d6bf08d1a3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Teste de Resistência" 
+                             class="portfolio-image">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Teste de Resistência</h3>
+                        <p class="text-gray-400">Avaliação de peças impressas em diferentes materiais sob condições controladas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 fade-in">
+                <a href="#contact" class="inline-block bg-primary hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+                    Quero um Orçamento
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section class="py-20 bg-darker">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    Tecnologias <span class="text-primary">Utilizadas</span>
+                </h2>
+                <p class="text-lg text-gray-300">
+                    Trabalhamos com as tecnologias mais avançadas de impressão 3D para oferecer a melhor solução para cada projeto.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-print text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white text-center">FDM</h3>
+                    <p class="text-gray-400 text-center">
+                        Modelagem por Fusão e Deposição - Ideal para protótipos funcionais e peças de baixo custo com diversos materiais termoplásticos.
+                    </p>
+                </div>
+                
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-sun text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white text-center">SLA</h3>
+                    <p class="text-gray-400 text-center">
+                        Estereolitografia - Produz peças com altíssimo nível de detalhe e superfícies lisas, perfeitas para moldes e protótipos visuais.
+                    </p>
+                </div>
+                
+                <div class="bg-dark p-8 rounded-lg border border-gray-800 hover:border-primary transition-colors">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-atom text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white text-center">SLS</h3>
+                    <p class="text-gray-400 text-center">
+                        Sinterização Seletiva a Laser - Técnica industrial para peças funcionais complexas sem necessidade de suportes, usando nylon e outros materiais.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12 fade-in">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                        Sobre a <span class="text-primary">Fine Line 3D</span>
+                    </h2>
+                    <p class="text-lg text-gray-300 mb-6">
+                        Fundada em 2018, a Fine Line 3D nasceu da paixão por transformar ideias em objetos físicos com precisão e qualidade excepcionais. Nosso objetivo é democratizar o acesso à tecnologia de impressão 3D, oferecendo serviços profissionais acessíveis para todos.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1 text-white">Missão</h3>
+                                <p class="text-gray-400">
+                                    Fornecer soluções inovadoras em fabricação aditiva que impulsionem a criatividade e a eficiência em diversos setores.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-eye text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1 text-white">Visão</h3>
+                                <p class="text-gray-400">
+                                    Ser referência nacional em impressão 3D, reconhecida pela excelência técnica, qualidade e atendimento personalizado.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-heart text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1 text-white">Valores</h3>
+                                <p class="text-gray-400">
+                                    Inovação, qualidade, sustentabilidade e compromisso com a satisfação total do cliente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 fade-in">
+                    <div class="bg-darker p-8 rounded-lg border border-gray-800">
+                        <h3 class="text-2xl font-semibold mb-6 text-white text-center">Nossa Equipe</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">Carlos Mendes</h4>
+                                    <p class="text-gray-400">Engenheiro Mecânico - 10 anos de experiência</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">Ana Lúcia</h4>
+                                    <p class="text-gray-400">Designer de Produto - Especialista em CAD</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">Roberto Alves</h4>
+                                    <p class="text-gray-400">Técnico em Impressão 3D - Operações</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">Juliana Costa</h4>
+                                    <p class="text-gray-400">Atendimento ao Cliente - Suporte</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-gray-800">
+                            <h4 class="text-lg font-semibold mb-4 text-white text-center">Nossos Números</h4>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <div class="text-3xl font-bold text-primary">500+</div>
+                                    <div class="text-gray-400">Clientes</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl font-bold text-primary">10K+</div>
+                                    <div class="text-gray-400">Peças</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl font-bold text-primary">15+</div>
+                                    <div class="text-gray-400">Impressoras</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-darker">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    Entre em <span class="text-primary">Contato</span>
+                </h2>
+                <p class="text-lg text-gray-300">
+                    Envie seu projeto para avaliação ou solicite um orçamento sem compromisso. Nossa equipe responderá em até 24 horas.
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto bg-dark rounded-lg border border-gray-800 p-8 fade-in">
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-white mb-2">Nome Completo</label>
+                            <input type="text" id="name" name="name" required 
+                                   class="w-full px-4 py-3 bg-darker border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-white mb-2">E-mail</label>
+                            <input type="email" id="email" name="email" required 
+                                   class="w-full px-4 py-3 bg-darker border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="phone" class="block text-white mb-2">Telefone (opcional)</label>
+                        <input type="tel" id="phone" name="phone" 
+                               class="w-full px-4 py-3 bg-darker border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white">
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-white mb-2">Mensagem</label>
+                        <textarea id="message" name="message" rows="4" required 
+                                  class="w-full px-4 py-3 bg-darker border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-white"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white mb-2">Anexar Arquivo 3D (opcional)</label>
+                        <div id="file-upload" class="file-upload rounded-lg p-8 text-center cursor-pointer">
+                            <input type="file" id="file-input" name="file" accept=".stl,.obj" class="hidden">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <p class="text-gray-400 mb-2">Arraste e solte seu arquivo aqui ou clique para selecionar</p>
+                                <p class="text-sm text-gray-500">Formatos aceitos: .STL ou .OBJ (máx. 20MB)</p>
+                            </div>
+                        </div>
+                        <div id="file-info" class="mt-2 text-sm text-gray-400 hidden">
+                            <span id="file-name"></span> (<span id="file-size"></span>)
+                            <button type="button" id="remove-file" class="ml-2 text-red-400 hover:text-red-300">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-primary hover:bg-blue-800 text-white px-6 py-4 rounded-lg font-medium transition-colors">
+                            Enviar Solicitação
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="success-message" class="hidden mt-6 p-4 bg-green-900 text-green-200 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold">Mensagem enviada com sucesso!</h3>
+                            <p class="text-sm">Entraremos em contato em breve. Obrigado!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="error-message" class="hidden mt-6 p-4 bg-red-900 text-red-200 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold">Ocorreu um erro ao enviar sua mensagem.</h3>
+                            <p class="text-sm">Por favor, tente novamente mais tarde.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark py-12 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
+                            <div class="w-6 h-6 bg-white rounded-full"></div>
+                        </div>
+                        <span class="text-xl font-bold text-white">Fine Line <span class="text-primary">3D</span></span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Transformando ideias em realidade através da impressão 3D de alta qualidade.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-primary transition-colors">Início</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-primary transition-colors">Serviços</a></li>
+                        <li><a href="#portfolio" class="text-gray-400 hover:text-primary transition-colors">Portfólio</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">Sobre Nós</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-primary transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Serviços</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Prototipagem Rápida</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Peças Funcionais</a></li>
+        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Componentes Personalizados</a></li>
+        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Acabamentos Especiais</a></li>
+      </ul>
+    </div>
+    
+    <div>
+      <h3 class="text-lg font-semibold text-white mb-4">Contato</h3>
+      <ul class="space-y-3 text-gray-400">
+        <li class="flex items-start">
+          <i class="fas fa-map-marker-alt text-primary mr-3 mt-1"></i>
+          <span>Av. das Impressoras, 1234 - São Paulo/SP</span>
+        </li>
+        <li class="flex items-center">
+          <i class="fas fa-phone-alt text-primary mr-3"></i>
+          <span>(11) 99129-9952</span>
+        </li>
+        <li class="flex items-center">
+          <i class="fas fa-envelope text-primary mr-3"></i>
+          <span>thefine.lines1@fineline3d.com</span>
+        </li>
+        <li class="flex items-center">
+          <i class="fas fa-clock text-primary mr-3"></i>
+          <span>Seg-Sex: 9h-18h</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="pt-8 border-t border-gray-800">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500 text-sm mb-4 md:mb-0">
+        &copy; 2023 Fine Line 3D. Todos os direitos reservados.
+      </p>
+      <div class="flex space-x-6">
+        <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">Termos de Serviço</a>
+        <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">Política de Privacidade</a>
+      </div>
+    </div>
+  </div>
+</div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  document.getElementById('mobile-menu-button').addEventListener('click', function() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+  });
+
+  // File upload handling
+  const fileUpload = document.getElementById('file-upload');
+  const fileInput = document.getElementById('file-input');
+  const fileInfo = document.getElementById('file-info');
+  const fileName = document.getElementById('file-name');
+  const fileSize = document.getElementById('file-size');
+  const removeFile = document.getElementById('remove-file');
+
+  fileUpload.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  fileUpload.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    fileUpload.classList.add('dragover');
+  });
+
+  fileUpload.addEventListener('dragleave', function() {
+    fileUpload.classList.remove('dragover');
+  });
+
+  fileUpload.addEventListener('drop', function(e) {
+    e.preventDefault();
+    fileUpload.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  removeFile.addEventListener('click', function(e) {
+    e.stopPropagation();
+    fileInput.value = '';
+    fileInfo.classList.add('hidden');
+  });
+
+  function handleFile(file) {
+    // Validate file type
+    const validTypes = ['application/octet-stream', 'application/vnd.ms-pki.stl', 'model/stl', 'model/obj'];
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    
+    if (fileExt !== 'stl' && fileExt !== 'obj') {
+      alert('Por favor, envie apenas arquivos .STL ou .OBJ');
+      return;
+    }
+    
+    // Validate file size (20MB max)
+    const maxSize = 20 * 1024 * 1024; // 20MB
+    if (file.size > maxSize) {
+      alert('O arquivo é muito grande. O tamanho máximo permitido é 20MB.');
+      return;
+    }
+    
+    // Display file info
+    fileName.textContent = file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    fileInfo.classList.remove('hidden');
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Form submission
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simulate form submission (in a real app, this would be a fetch to your backend)
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    
+    // Randomly show success or error for demo purposes
+    if (Math.random() > 0.2) {
+      successMessage.classList.remove('hidden');
+      errorMessage.classList.add('hidden');
+      
+      // Reset form
+      this.reset();
+      fileInfo.classList.add('hidden');
+      
+      // Scroll to success message
+      setTimeout(() => {
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      errorMessage.classList.remove('hidden');
+      successMessage.classList.add('hidden');
+      
+      // Scroll to error message
+      setTimeout(() => {
+        errorMessage.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+    
+    // Hide messages after 5 seconds
+    setTimeout(() => {
+      successMessage.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+    }, 5000);
+  });
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        // Close mobile menu if open
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
+        }
+        
+        // Scroll to target
+        targetElement.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // Add fade-in animation to elements when they come into view
+  const fadeElements = document.querySelectorAll('.fade-in');
+  
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-fadeIn');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+  
+  fadeElements.forEach(element => {
+    fadeObserver.observe(element);
+  });
+</script>
+</body>
+</html>
